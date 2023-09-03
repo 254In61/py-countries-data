@@ -42,6 +42,8 @@ class DataBaseQuery():
 
         except IndexError:
             return "ERROR during data querry"
+        except mysql.connector.errors.ProgrammingError:
+            return "Unknown column in 'where clause'"
 
 class Chat():
     """
