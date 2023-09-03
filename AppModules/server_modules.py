@@ -8,7 +8,7 @@ PORT = 55555   # Arbitrary non-privileged port
 
 
 def connect_mysql():
-    return mysql.connector.connect( "localhost", os.environ.get('MYSQL_USER'),os.environ.get('MYSQL_PASSWORD'),"mydb")
+    return mysql.connector.connect( host = "localhost", user = os.environ.get('MYSQL_USER'),password = os.environ.get('MYSQL_PASSWORD'), database = "mydb")
 
 class DataBaseQuery():
     """
