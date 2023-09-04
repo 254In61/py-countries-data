@@ -2,12 +2,10 @@ import mysql.connector
 import json
 import os
 
-SERVER_HOST = '192.168.1.99' # Server's IP address..Can be resolved using gethostbyname() if using DNS.
-PORT = 55556   # Arbitrary non-privileged port
-
-
-def connect_mysql():
-    return mysql.connector.connect( host = "localhost", user = os.environ.get('MYSQL_USER'),password = os.environ.get('MYSQL_PASSWORD'), database = "mydb")
+def mysql_connect():
+    cnx = mysql.connector.connect( host = "localhost", user = os.environ.get('MYSQL_USER'),password = os.environ.get('MYSQL_PASSWORD'), database = "mydb")
+    cursor = cnx.cursor()
+    return cursor
 
 class DataBase():
     """
@@ -21,14 +19,16 @@ class DataBase():
     def getData(self):
 
         try: 
-            sql_con = connect_mysql()
-            mycursor = sql_con.cursor()
- 
+            cursor = mysql_connect()
+            
             query = "select * from countries where country = '{}'".format(self.in_str.split(":")[1])
             print("Created MySQL Query : ",query)
-            mycursor.execute(query)
-            output = mycursor.fetchall() 
-            print("Results from MySQL Server : ",mycursor.fetchall()) 
+
+            #cursor.execute(query)
+            print("Query results :",cursor.execute(query))
+
+            output = cursor.fetchall() 
+            print("Results from MySQL Server : ",cursor.fetchall()) 
 
             if output == []:
                 out_string = "ERROR.No data present"
@@ -36,7 +36,7 @@ class DataBase():
             else:
                 # mycursor.execute(query) returns a List
                 # socket transmits a string, so List has to be converted to a string
-                out_string = json.dumps(mycursor.fetchall()[0])
+                out_string = json.dumps(cursor.fetchall()[0])
             
             print("Results sent to client : ",out_string)
             return out_string
