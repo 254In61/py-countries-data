@@ -9,7 +9,7 @@ def main():
     choice = "Y"
     
     while True:
-      getData()
+      dataHandler()
       choice = input("\nContinue with program? y/n : ").capitalize()
 
       if choice != "Y":
@@ -17,26 +17,26 @@ def main():
         break
         
       
-def menu():
-    print("\nMENU\n1 = Search by country name\n2 = Search by country capital\n")
 
-def getData():
+def dataHandler():
     menu()
-    choice = input("Key in search criteria as per the menu : ")
+    choice = input("Key in your choice as per the menu : ")
 
-    if choice not in ["1","2"]:
+    if choice not in ["1","2","3" ,"4"]:
         print("Error. Key in the right value as per the menu.")
 
     else:
-
         if choice == "1":
-            column_id = "country"
+            print(perform_query(DataManager.getData("get")))
 
         elif choice == "2":
-            column_id = "capital"
-
-        query = column_id + ":" + input("Key in value : ").capitalize()
-        print(perform_query(query))
+            print(perform_query(DataManager.putData("put")))
+        
+        elif choice == "3":
+            print(perform_query(DataManager.postData("post")))
+        
+        elif choice == "4":
+            print(perform_query(DataManager.deleteData("delete")))
 
 if __name__ == "__main__":
     main()
