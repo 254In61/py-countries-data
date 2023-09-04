@@ -3,7 +3,7 @@ import json
 import os
 
 SERVER_HOST = '192.168.1.99' # Server's IP address..Can be resolved using gethostbyname() if using DNS.
-PORT = 55555   # Arbitrary non-privileged port
+PORT = 55556   # Arbitrary non-privileged port
 
 
 def connect_mysql():

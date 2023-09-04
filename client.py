@@ -1,6 +1,5 @@
-import socket
-import json
-from AppModules.client_modules import *
+from AppModules.clientModules import *
+from AppModules.socketParams import *
 
 
 def main():

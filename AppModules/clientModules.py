@@ -1,9 +1,5 @@
 import socket
 
-# Client re-usable modules
-SERVER_HOST = '192.168.1.99' # Server's IP address..Can be resolved using gethostbyname() if using DNS.
-PORT = 55555   # Arbitrary non-privileged port
-
 class ClientMessageExchange():
     """
     Class that handles chat.

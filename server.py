@@ -1,6 +1,6 @@
-# Server side script
 import socket
-from AppModules.server_modules import *
+from AppModules.serverModules import *
+from AppModules.socketParams import *
 
 def main():
     print("Create the initial server socket .....")
