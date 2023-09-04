@@ -4,8 +4,8 @@ import os
 
 def mysql_connect():
     cnx = mysql.connector.connect( host = "localhost", user = os.environ.get('MYSQL_USER'),password = os.environ.get('MYSQL_PASSWORD'), database = "mydb")
-    cursor = cnx.cursor()
-    return cursor
+    
+    return cnx
 
 class DataBase():
     """
@@ -19,8 +19,7 @@ class DataBase():
     def getData(self):
 
         try: 
-            cursor = mysql_connect()
-            
+            cursor = mysql_connect().cursor()
             query = "select * from countries where country = '{}'".format(self.in_str.split(":")[1])
             print("Created MySQL Query : ",query)
 
