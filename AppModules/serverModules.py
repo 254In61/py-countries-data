@@ -2,32 +2,41 @@ import mysql.connector
 import json
 import os
 
+
 def mysql_connect():
-    cnx = mysql.connector.connect( host = "localhost", user = os.environ.get('MYSQL_USER'),password = os.environ.get('MYSQL_PASSWORD'), database = "mydb")
-    
+    cnx = mysql.connector.connect(
+        host="localhost",
+        user=os.environ.get("MYSQL_USER"),
+        password=os.environ.get("MYSQL_PASSWORD"),
+        database="mydb",
+    )
+
     return cnx
 
-class DataBase():
+
+class DataBase:
     """
     - A query comes in as a string value 'column_name:value_searched'
     - Query is split into the different values to fit into an sql WHERE format.
     - Results are converted into JSON string before returned.
     """
-    def __init__(self,in_str):
+
+    def __init__(self, in_str):
         self.in_str = in_str
 
     def getData(self):
-
-        try: 
+        try:
             cursor = mysql_connect().cursor()
-            query = "select * from countries where country = '{}'".format(self.in_str.split(":")[1])
-            print("Created MySQL Query : ",query)
+            query = "select * from countries where country = '{}'".format(
+                self.in_str.split(":")[1]
+            )
+            print("Created MySQL Query : ", query)
 
-            #cursor.execute(query)
-            print("Query results :",cursor.execute(query))
+            # cursor.execute(query)
+            print("Query results :", cursor.execute(query))
 
-            output = cursor.fetchall() 
-            print("Results from MySQL Server : ",cursor.fetchall()) 
+            output = cursor.fetchall()
+            print("Results from MySQL Server : ", cursor.fetchall())
 
             if output == []:
                 out_string = "ERROR.No data present"
@@ -36,15 +45,15 @@ class DataBase():
                 # mycursor.execute(query) returns a List
                 # socket transmits a string, so List has to be converted to a string
                 out_string = json.dumps(cursor.fetchall()[0])
-            
-            print("Results sent to client : ",out_string)
+
+            print("Results sent to client : ", out_string)
             return out_string
 
         except IndexError:
             return "ERROR during data querry"
         except mysql.connector.errors.ProgrammingError:
             return "Unknown column in 'where clause'"
-    
+
     def putData(self):
         pass
 
@@ -54,11 +63,13 @@ class DataBase():
     def deleteData(self):
         pass
 
-class ServerMessageExchange():
+
+class ServerMessageExchange:
     """
     - Job of class is just to send and recieve messages from client through the created socket.
     """
-    def __init__(self,clientsocket):
+
+    def __init__(self, clientsocket):
         self.clientsocket = clientsocket
 
     def messaging(self):
@@ -68,17 +79,16 @@ class ServerMessageExchange():
         Step 3: Send query results back to client.
         """
         query = self.clientsocket.recv(1024).decode("utf-8")
-        print("Incoming Client message : ",query)
+        print("Incoming Client message : ", query)
 
         if "get" in query:
             self.clientsocket.sendall(DataBase(query).getData().encode("utf-8"))
 
         elif "put" in query:
             self.clientsocket.sendall(DataBase(query).putData().encode("utf-8"))
-        
+
         elif "post" in query:
             self.clientsocket.sendall(DataBase(query).postData().encode("utf-8"))
-        
+
         elif "delete" in query:
             self.clientsocket.sendall(DataBase(query).deleteData().encode("utf-8"))
-        
