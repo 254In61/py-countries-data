@@ -1,6 +1,5 @@
 import socket
-from AppModules.serverModules import *
-from AppModules.socketParams import *
+from ServerModules.serverModules import *
 
 # Server socker role is just to create client socket
 # Client socket handles the exchange between client and server.
@@ -10,7 +9,7 @@ def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create an object out of socket class.
 
     print("Binding socket....")
-    s.bind((SERVER_HOST, PORT))  # Using bind() method within the socket class.
+    s.bind(os.environ.get("MYSQL_SERVER_HOST"), os.environ.get("MYSQL_SERVER_PORT"))  # Using bind() method within the socket class.
 
     print("Putting socket in listening state....")
     s.listen(1)  # Use listen() method within the socket class

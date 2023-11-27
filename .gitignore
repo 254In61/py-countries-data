@@ -1,3 +1,4 @@
 env-vars
 candles.md
-AppModules/__pycache__/
+ServerModules/__pycache__/
+ClientModules/__pycache__/

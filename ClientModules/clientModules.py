@@ -1,11 +1,11 @@
 import socket
-from AppModules.socketParams import *
+import os
 
 
 def create_socket():
     # Create client socket
     cs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    cs.connect((SERVER_HOST, PORT))
+    cs.connect((os.environ.get("MYSQL_SERVER_HOST"), os.environ.get("MYSQL_SERVER_PORT")))
     return cs
 
 

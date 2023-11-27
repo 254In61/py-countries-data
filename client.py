@@ -1,6 +1,4 @@
-from AppModules.clientModules import *
-from AppModules.socketParams import *
-
+from ClientModules.clientModules import *
 
 def dataHandler():
     menu()

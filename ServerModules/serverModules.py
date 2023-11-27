@@ -4,14 +4,13 @@ import os
 
 
 def mysql_connect():
-    cnx = mysql.connector.connect(
-        host="localhost",
-        user=os.environ.get("MYSQL_USER"),
-        password=os.environ.get("MYSQL_PASSWORD"),
-        database="mydb",
-    )
 
-    return cnx
+    try:
+        cnx = mysql.connector.connect(host="localhost",user=os.environ.get("MYSQL_USER"),password=os.environ.get("MYSQL_PASSWORD"),database="mydb")
+        return cnx
+    except:
+        print ("Error in connecting to the mysql server")
+        return "NULL"
 
 
 class DataBase:
@@ -26,13 +25,11 @@ class DataBase:
 
     def getData(self):
         try:
-            cursor = mysql_connect().cursor()
-            query = "select * from countries where country = '{}'".format(
-                self.in_str.split(":")[1]
-            )
-            print("Created MySQL Query : ", query)
+            query = "select * from Countries where CountryName = '{}'".format(self.in_str.split(":")[1])
+            print("MySQL Query : ", query)
 
             # cursor.execute(query)
+            cursor = mysql_connect().cursor()
             print("Query results :", cursor.execute(query))
 
             output = cursor.fetchall()

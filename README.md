@@ -31,6 +31,24 @@ How to Use
   2) MYSQL_PASSWORD
 - Start the server with server.py
 
+MySQL
+=====
+- The SQL server details are added in AppModule/socketParams.py
+
+- Sample MySQL Table used:
+
+mysql> select * from Countries;
++-------------+-------------+------------+-----------------+-------------------+
+| CountryName | CountryCode | Capitol    | Leader          | PopulationMillion |
++-------------+-------------+------------+-----------------+-------------------+
+| Kenya       |         254 | Nairobi    | William Ruto    |              50.2 |
+| Tanzania    |         255 | Dodoma     | Samia Suluhu    |              60.2 |
+| Australia   |          61 | Canberra   | Antony Albanese |              28.5 |
+| USA         |           1 | Washington | Joe Biden       |             320.4 |
++-------------+-------------+------------+-----------------+-------------------+
+4 rows in set (0.00 sec)
+
+
 
 Author
 ======
