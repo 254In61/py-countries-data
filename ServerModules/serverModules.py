@@ -16,43 +16,45 @@ def mysql_query(query):
         if connection.is_connected():
             print('mysql_query() : Connected to MySQL database')
 
-            try:
-                cursor = connection.cursor()
+            cursor = connection.cursor()
 
-                # Execute a query
-                cursor.execute(query) 
+            # Execute a query
+            cursor.execute(query) 
 
-                # Fetch results
-                rows = cursor.fetchall() # cursor.fetchall() returns a List
-                print("mysql_query() : Query results => ", rows)
+            # Fetch results
+            rows = cursor.fetchall() # cursor.fetchall() returns a List
+            print("mysql_query() : Query results => ", rows)
                 
-                # socket transmits a string, so List has to be converted to a string
-                if mysql_query(query) == []:
-                    out_string = "Country data not present"
+            # socket transmits a string, so List has to be converted to a string
+            if mysql_query(query) == []:
+                out_string = "Country data not present"
 
-                else:
-                    out_string = json.dumps(mysql_query(query)[0])
+            else:
+                out_string = json.dumps(mysql_query(query)[0])
+                
+            cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
+            connection.close()
 
-                return out_string
+            return out_string
                 
             
-            except mysql.connector.Error as e:
-                print(f"mysql_query() : Error executing SQL query: {e}")
-                return "Error executing SQL query"
+            # except mysql.connector.Error as e:
+            #     print(f"mysql_query() : Error executing SQL query: {e}")
+            #     return "Error executing SQL query"
 
-            finally:
-                if 'cursor' in locals():
-                    cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
+            # finally:
+            #     if 'cursor' in locals():
+            #         cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
 
    
     except mysql.connector.Error as e:
         print(f"mysql_query() : Error connecting to MySQL database: {e}")
         return "Error connecting to MySQL database"
     
-    finally:
-        if 'connection' in locals() and connection.is_connected():
-            connection.close() #  close the cursor and connection properly when you're done to avoid resource leaks.
-            print('mysql_query() : MySQL database connection closed')
+    # finally:
+    #     if 'connection' in locals() and connection.is_connected():
+    #         connection.close() #  close the cursor and connection properly when you're done to avoid resource leaks.
+    #         print('mysql_query() : MySQL database connection closed')
 
 class DBQuery():
     """

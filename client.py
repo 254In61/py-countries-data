@@ -26,16 +26,7 @@ def dataHandler():
 
 def main():
     # Initialize the program
-    choice = "Y"
-
-    while True:
-        dataHandler()
-        choice = input("\nContinue with program? y/n : ").capitalize()
-
-        if choice != "Y":
-            print("\nProgram ended....\n")
-            break
-
+    dataHandler()
 
 if __name__ == "__main__":
     main()
