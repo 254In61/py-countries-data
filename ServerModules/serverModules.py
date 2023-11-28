@@ -22,6 +22,7 @@ def mysql_query(query):
     print("mysql_query() : Query results => ", cursor.fetchall())
 
     out_string = json.dumps(cursor.fetchall())
+    print("mysql_query() : Data string to client => ", out_string)
                 
     cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
     connection.close()
