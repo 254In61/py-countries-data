@@ -32,8 +32,8 @@ def mysql_query(query):
             else:
                 out_string = json.dumps(mysql_query(query)[0])
                 
-            # cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
-            connection.close()
+            cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
+            # connection.close()
 
             return out_string
                 
