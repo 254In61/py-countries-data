@@ -21,20 +21,27 @@ def mysql_query(query):
     # Fetch results with cursor.fetchall() 
     print("mysql_query() : Query results => ", cursor.fetchall())
 
+    out_string = json.dumps(cursor.fetchall()[0])
+                
+    cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
+    connection.close()
+    print("mysql_query() : Connection to MYSQL closed")
+    
+    return out_string
 
     # cursor.fetchall() returns a List            
     # socket transmits a string, so List has to be converted to a string
-    if cursor.fetchall() == []:
-        out_string = "Country data not present"
+    # if cursor.fetchall() == []:
+    #     out_string = "Country data not present"
 
-    else:
-        out_string = json.dumps(cursor.fetchall()[0])
+    # else:
+    #     out_string = json.dumps(cursor.fetchall()[0])
                 
-        cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
-        connection.close()
-        print("mysql_query() : Connection to MYSQL closed")
+    #     cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
+    #     connection.close()
+    #     print("mysql_query() : Connection to MYSQL closed")
 
-    return out_string
+    # return out_string
         
     
         # if connection.is_connected():
