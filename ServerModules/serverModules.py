@@ -14,7 +14,7 @@ def mysql_query(query):
         )
     
         if connection.is_connected():
-            print('Connected to MySQL database')
+            print('mysql_query() : Connected to MySQL database')
 
             try:
                 cursor = connection.cursor()
@@ -24,7 +24,7 @@ def mysql_query(query):
 
                 # Fetch results
                 rows = cursor.fetchall() # cursor.fetchall() returns a List
-                print("Query results : ", rows)
+                print("mysql_query() : Query results => ", rows)
                 
                 # socket transmits a string, so List has to be converted to a string
                 if mysql_query(query) == []:
@@ -37,7 +37,7 @@ def mysql_query(query):
                 
             
             except mysql.connector.Error as e:
-                print(f"Error executing SQL query: {e}")
+                print(f"mysql_query() : Error executing SQL query: {e}")
                 return "Error executing SQL query"
 
             finally:
@@ -46,14 +46,27 @@ def mysql_query(query):
 
    
     except mysql.connector.Error as e:
-        print(f"Error connecting to MySQL database: {e}")
+        print(f"mysql_query() : Error connecting to MySQL database: {e}")
         return "Error connecting to MySQL database"
     
     finally:
         if 'connection' in locals() and connection.is_connected():
             connection.close() #  close the cursor and connection properly when you're done to avoid resource leaks.
-            print('MySQL database connection closed')
+            print('mysql_query() : MySQL database connection closed')
 
+class DBQuery():
+    """
+    - Job of class is just to interract with the MySQL DB Server.
+    """
+    def __init__(self,string_pattern):
+        self.string_pattern = string_pattern
+    
+    def getData(self):
+        query = "DBQuerry.getData() => query : select * from Countries where CountryName = '{}'".format(self.string_pattern.split(":")[1])
+        return mysql_query(query)
+    
+    def putData(self):
+        pass
 
 class ServerMessageExchange:
     """
@@ -70,14 +83,13 @@ class ServerMessageExchange:
         Step 3: Send query results back to client.
         """
         string_pattern = self.clientsocket.recv(1024).decode("utf-8")
-        print("Incoming Client message : ", string_pattern)
+        print("ServerMessageExchange.messaging() => string pattern : ", string_pattern)
 
         if "get" in string_pattern:
-            query = "select * from Countries where CountryName = '{}'".format(string_pattern.split(":")[1])
-            self.clientsocket.sendall(mysql_query(query).encode("utf-8"))
+            self.clientsocket.sendall(DBQuery(string_pattern).getData().encode("utf-8"))
 
         elif "put" in string_pattern:
-            self.clientsocket.sendall(mysql_query(query).encode("utf-8"))
+            self.clientsocket.sendall(DBQuery(string_pattern).putData().encode("utf-8"))
 
         # elif "post" in string_pattern:
         #     self.clientsocket.sendall(DataBase(string_pattern).postData().encode("utf-8"))
