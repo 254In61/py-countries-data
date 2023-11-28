@@ -23,6 +23,11 @@ def mysql_query(query):
     
     print("mysql_query() : Produced Data type => ",type(cursor.fetchall()))
 
+    print("Country : ", cursor.fetchall()[0][0])
+    print("Telephone_Code : ", cursor.fetchall()[0][1])
+    print("Capital_City : ", cursor.fetchall()[0][2])
+    print("Political_Leader : ", cursor.fetchall()[0][3])
+    print("Population_in_millions : ", cursor.fetchall()[0][4])
     list_x = cursor.fetchall()
 
     out_string = json.dumps(list_x)
