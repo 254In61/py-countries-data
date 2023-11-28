@@ -16,31 +16,36 @@ def mysql_query(query):
     cursor = connection.cursor()
 
     # Execute a query
-    cursor.execute(query) 
-
-    # Fetch results with cursor.fetchall() 
+    cursor.execute(query)
+    output = cursor.fetchall() # Fetch results with cursor.fetchall()
     print("mysql_query() : Query results => ", cursor.fetchall())
+
+    cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
+    connection.close()
+    print("mysql_query() : Connection to MYSQL closed") 
+
+    return output
+
+def string_output(query):
     
-    print("mysql_query() : Produced Data type => ",type(cursor.fetchall()))
+    # cursor.fetchall() returns output as a list 
+    list_x = mysql_query(query)
+
+    # Socket transmits in a string format so convert list to string
     
-    print("index 0 = ", cursor.fetchall()[0])
-    print("Country : ", cursor.fetchall()[0][0])
-    print("Telephone_Code : ", cursor.fetchall()[0][1])
-    print("Capital_City : ", cursor.fetchall()[0][2])
-    print("Political_Leader : ", cursor.fetchall()[0][3])
-    print("Population_in_millions : ", cursor.fetchall()[0][4])
-    list_x = cursor.fetchall()
+    print("mysql_query() : Produced Data type => ",type(list_x))
+    
+    print("index 0 = ", list_x[0])
+    print("Country : ", list_x[0][0])
+    print("Telephone_Code : ", list_x[0][1])
+    print("Capital_City : ", list_x[0][2])
+    print("Political_Leader : ", list_x[0][3])
+    print("Population_in_millions : ", list_x[0][4])
 
     out_string = json.dumps(list_x)
     print("mysql_query() : Data string to client => ", out_string)
-                
-    cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
-    connection.close()
-    print("mysql_query() : Connection to MYSQL closed")
     
     return out_string
-
-    
 
 class DBQuery():
     """
@@ -52,7 +57,7 @@ class DBQuery():
     def getData(self):
         query = "select * from Countries where CountryName = '{}'".format(self.string_pattern.split(":")[1])
         print("DBQuery().getData() => query : ", query)
-        return mysql_query(query)
+        return string_output(query)
     
     def putData(self):
         pass
