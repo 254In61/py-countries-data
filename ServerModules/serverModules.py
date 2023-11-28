@@ -5,33 +5,33 @@ import os
 
 def mysql_query(query):
     # Establish a connection to the database
-    try:
-        connection = mysql.connector.connect(
+    connection = mysql.connector.connect(
             host="localhost",
             user=os.environ.get("MYSQL_SERVER_USER"),
             password=os.environ.get("MYSQL_SERVER_PASSWD"),
             database="mydb"
         )
-        print('mysql_query() : Connected to MySQL database')
+    print('mysql_query() : Connected to MySQL database')
 
-        # Execute a query
-        cursor = connection.cursor()
+    # Execute a query
+    cursor = connection.cursor()
 
-        # Fetch results
-        rows = cursor.fetchall() # cursor.fetchall() returns a List
-        print("mysql_query() : Query results => ", rows)
+    # Fetch results
+    rows = cursor.fetchall() # cursor.fetchall() returns a List
+    print("mysql_query() : Query results => ", rows)
                 
-        # socket transmits a string, so List has to be converted to a string
-        if mysql_query(query) == []:
-            out_string = "Country data not present"
+    # socket transmits a string, so List has to be converted to a string
+    if mysql_query(query) == []:
+        out_string = "Country data not present"
 
-        else:
-            out_string = json.dumps(mysql_query(query)[0])
+    else:
+        out_string = json.dumps(mysql_query(query)[0])
                 
-            cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
-            connection.close()
+        cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
+        connection.close()
+        print("mysql_query() : Connection to MYSQL closed")
 
-        return out_string
+    return out_string
         
     
         # if connection.is_connected():
@@ -68,9 +68,9 @@ def mysql_query(query):
         #     #         cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
 
    
-    except mysql.connector.Error as e:
-        print(f"mysql_query() : Error connecting to MySQL database: {e}")
-        return "Error connecting to MySQL database"
+    # except mysql.connector.Error as e:
+    #     print(f"mysql_query() : Error connecting to MySQL database: {e}")
+    #     return "Error connecting to MySQL database"
     
     # finally:
     #     if 'connection' in locals() and connection.is_connected():
