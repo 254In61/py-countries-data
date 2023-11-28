@@ -32,20 +32,12 @@ def string_output(query):
     list_x = mysql_query(query)
 
     # Socket transmits in a string format so convert list to string
+    # Server end will not process any data. Just querry the MySQL and send results through the socket.
+    # Client to decide what to do with the end results.
     
-    print("mysql_query() : Produced Data type => ",type(list_x))
+    print("string_output() : Data string to client => ", json.dumps(list_x))
     
-    print("index 0 = ", list_x[0])
-    print("Country : ", list_x[0][0])
-    print("Telephone_Code : ", list_x[0][1])
-    print("Capital_City : ", list_x[0][2])
-    print("Political_Leader : ", list_x[0][3])
-    print("Population_in_millions : ", list_x[0][4])
-
-    out_string = json.dumps(list_x)
-    print("mysql_query() : Data string to client => ", out_string)
-    
-    return out_string
+    return json.dumps(list_x)
 
 class DBQuery():
     """
