@@ -62,7 +62,8 @@ class DBQuery():
         self.string_pattern = string_pattern
     
     def getData(self):
-        query = "DBQuerry.getData() => query : select * from Countries where CountryName = '{}'".format(self.string_pattern.split(":")[1])
+        query = "select * from Countries where CountryName = '{}'".format(self.string_pattern.split(":")[1])
+        print("DBQuery().getData() => query : ", query)
         return mysql_query(query)
     
     def putData(self):
@@ -83,7 +84,7 @@ class ServerMessageExchange:
         Step 3: Send query results back to client.
         """
         string_pattern = self.clientsocket.recv(1024).decode("utf-8")
-        print("ServerMessageExchange.messaging() => string pattern : ", string_pattern)
+        print("ServerMessageExchange().messaging() => string pattern : ", string_pattern)
 
         if "get" in string_pattern:
             self.clientsocket.sendall(DBQuery(string_pattern).getData().encode("utf-8"))
