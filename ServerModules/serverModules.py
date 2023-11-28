@@ -12,39 +12,60 @@ def mysql_query(query):
             password=os.environ.get("MYSQL_SERVER_PASSWD"),
             database="mydb"
         )
+        print('mysql_query() : Connected to MySQL database')
+
+        # Execute a query
+        cursor = connection.cursor()
+
+        # Fetch results
+        rows = cursor.fetchall() # cursor.fetchall() returns a List
+        print("mysql_query() : Query results => ", rows)
+                
+        # socket transmits a string, so List has to be converted to a string
+        if mysql_query(query) == []:
+            out_string = "Country data not present"
+
+        else:
+            out_string = json.dumps(mysql_query(query)[0])
+                
+            cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
+            connection.close()
+
+        return out_string
+        
     
-        if connection.is_connected():
-            print('mysql_query() : Connected to MySQL database')
+        # if connection.is_connected():
+        #     print('mysql_query() : Connected to MySQL database')
 
-            cursor = connection.cursor()
+        #     cursor = connection.cursor()
 
-            # Execute a query
-            cursor.execute(query) 
+        #     # Execute a query
+        #     cursor.execute(query) 
 
-            # Fetch results
-            rows = cursor.fetchall() # cursor.fetchall() returns a List
-            print("mysql_query() : Query results => ", rows)
+        #     # Fetch results
+        #     rows = cursor.fetchall() # cursor.fetchall() returns a List
+        #     print("mysql_query() : Query results => ", rows)
                 
-            # socket transmits a string, so List has to be converted to a string
-            if mysql_query(query) == []:
-                out_string = "Country data not present"
+        #     # socket transmits a string, so List has to be converted to a string
+        #     if mysql_query(query) == []:
+        #         out_string = "Country data not present"
 
-            else:
-                out_string = json.dumps(mysql_query(query)[0])
+        #     else:
+        #         out_string = json.dumps(mysql_query(query)[0])
                 
-            # cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
-            # connection.close()
+        #     # cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
+        #     # connection.close()
 
-            return out_string
+        #     return out_string
                 
             
-            # except mysql.connector.Error as e:
-            #     print(f"mysql_query() : Error executing SQL query: {e}")
-            #     return "Error executing SQL query"
+        #     # except mysql.connector.Error as e:
+        #     #     print(f"mysql_query() : Error executing SQL query: {e}")
+        #     #     return "Error executing SQL query"
 
-            # finally:
-            #     if 'cursor' in locals():
-            #         cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
+        #     # finally:
+        #     #     if 'cursor' in locals():
+        #     #         cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
 
    
     except mysql.connector.Error as e:
