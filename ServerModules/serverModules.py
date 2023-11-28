@@ -21,7 +21,7 @@ def mysql_query(query):
     # Fetch results with cursor.fetchall() 
     print("mysql_query() : Query results => ", cursor.fetchall())
     
-    print(type(cursor.fetchall()))
+    print("mysql_query() : Produced Data type => ",type(cursor.fetchall()))
 
     list_x = cursor.fetchall()
 
