@@ -18,16 +18,17 @@ def mysql_query(query):
     # Execute a query
     cursor.execute(query) 
 
-    # Fetch results
-    rows = cursor.fetchall() # cursor.fetchall() returns a List
-    print("mysql_query() : Query results => ", rows)
-                
+    # Fetch results with cursor.fetchall() 
+    print("mysql_query() : Query results => ", cursor.fetchall())
+
+
+    # cursor.fetchall() returns a List            
     # socket transmits a string, so List has to be converted to a string
-    if mysql_query(query) == []:
+    if cursor.fetchall() == []:
         out_string = "Country data not present"
 
     else:
-        out_string = json.dumps(mysql_query(query)[0])
+        out_string = json.dumps(cursor.fetchall()[0])
                 
         cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
         connection.close()
