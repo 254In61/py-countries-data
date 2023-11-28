@@ -9,7 +9,7 @@ def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create an object out of socket class.
 
     print("Binding socket....")
-    s.bind((os.environ.get("MYSQL_SERVER_HOST"), os.environ.get("MYSQL_SERVER_PORT")))  # Using bind() method within the socket class.
+    s.bind((os.environ.get("MYSQL_SERVER_HOST"), int(os.environ.get("MYSQL_SERVER_PORT"))))  # Using bind() method within the socket class.
     
     """
     The bind() method is used to associate a socket with a specific network interface and port number. 
