@@ -11,6 +11,7 @@ def mysql_connect():
             password=os.environ.get("MYSQL_SERVER_PASSWD"),
             database="mydb"
         )
+    print(cnx)
     return cnx
     
 
