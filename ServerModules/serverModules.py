@@ -58,16 +58,17 @@ class DataBase:
     def getData(self):
         
         query = "select * from Countries where CountryName = '{}'".format(self.in_str.split(":")[1])
+        print("MySQL Query : ", query)
 
         if mysql_query(query) == []:
-            out_string = "ERROR.No data present"
+            out_string = "ERROR.No data present about : '{}'".format(self.in_str.split(":")[1])
 
         else:
             # socket transmits a string, so List has to be converted to a string
             out_string = json.dumps(mysql_query(query)[0])
 
-            print("Results sent to client : ", out_string)
-            return out_string
+        print("Results sent to client : ", out_string)
+        return out_string
 
         # except IndexError:
         #     return "ERROR during data querry"
