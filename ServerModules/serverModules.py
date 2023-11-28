@@ -22,7 +22,8 @@ def mysql_query(query):
     print("mysql_query() : Query results => ", cursor.fetchall())
     
     print("mysql_query() : Produced Data type => ",type(cursor.fetchall()))
-
+    
+    print("index 0 = ", cursor.fetchall()[0])
     print("Country : ", cursor.fetchall()[0][0])
     print("Telephone_Code : ", cursor.fetchall()[0][1])
     print("Capital_City : ", cursor.fetchall()[0][2])
