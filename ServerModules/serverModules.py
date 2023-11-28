@@ -13,8 +13,10 @@ def mysql_query(query):
         )
     print('mysql_query() : Connected to MySQL database')
 
-    # Execute a query
     cursor = connection.cursor()
+
+    # Execute a query
+    cursor.execute(query) 
 
     # Fetch results
     rows = cursor.fetchall() # cursor.fetchall() returns a List
