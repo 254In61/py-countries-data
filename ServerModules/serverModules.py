@@ -3,17 +3,46 @@ import json
 import os
 
 
-def mysql_connect():
+def mysql_query(query):
 
-    cnx = mysql.connector.connect(
+    # Establish a connection to the database
+    try:
+        connection = mysql.connector.connect(
             host="localhost",
             user=os.environ.get("MYSQL_SERVER_USER"),
             password=os.environ.get("MYSQL_SERVER_PASSWD"),
             database="mydb"
         )
-    print(cnx)
-    return cnx
     
+        if connection.is_connected():
+            print('Connected to MySQL database')
+
+            try:
+                cursor = connection.cursor()
+
+                # Execute a query
+                cursor.execute(query) # cursor.execute(query) returns a List
+
+                # Fetch results
+                rows = cursor.fetchall()
+                print("Query results : ", rows)
+                return rows
+            
+            except mysql.connector.Error as e:
+                print(f"Error executing SQL query: {e}")
+
+            finally:
+                if 'cursor' in locals():
+                    cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
+
+   
+    except mysql.connector.Error as e:
+        print(f"Error connecting to MySQL database: {e}")
+    
+    finally:
+        if 'connection' in locals() and connection.is_connected():
+            connection.close() #  close the cursor and connection properly when you're done to avoid resource leaks.
+            print('MySQL database connection closed')
 
 
 class DataBase:
@@ -27,32 +56,24 @@ class DataBase:
         self.in_str = in_str
 
     def getData(self):
-        try:
-            query = "select * from Countries where CountryName = '{}'".format(self.in_str.split(":")[1])
-            print("MySQL Query : ", query)
+        
+        query = "select * from Countries where CountryName = '{}'".format(self.in_str.split(":")[1])
 
-            # cursor.execute(query)
-            cursor = mysql_connect().cursor()
-            print("Query results :", cursor.execute(query))
+        if mysql_query(query) == []:
+            out_string = "ERROR.No data present"
 
-            output = cursor.fetchall()
-            print("Results from MySQL Server : ", cursor.fetchall())
-
-            if output == []:
-                out_string = "ERROR.No data present"
-
-            else:
-                # mycursor.execute(query) returns a List
-                # socket transmits a string, so List has to be converted to a string
-                out_string = json.dumps(cursor.fetchall()[0])
+        else:
+            # socket transmits a string, so List has to be converted to a string
+            out_string = json.dumps(mysql_query(query)[0])
 
             print("Results sent to client : ", out_string)
             return out_string
 
-        except IndexError:
-            return "ERROR during data querry"
-        except mysql.connector.errors.ProgrammingError:
-            return "Unknown column in 'where clause'"
+        # except IndexError:
+        #     return "ERROR during data querry"
+        
+        # except mysql.connector.errors.ProgrammingError:
+        #     return "Unknown column in 'where clause'"
 
     def putData(self):
         pass

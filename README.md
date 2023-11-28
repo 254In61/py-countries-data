@@ -48,6 +48,9 @@ mysql> select * from Countries;
 +-------------+-------------+------------+-----------------+-------------------+
 4 rows in set (0.00 sec)
 
+- Ensure your Application Server has python mysql-connector installed.
+  $ pip install mysql-connector-python
+
 
 
 Author
