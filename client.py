@@ -12,7 +12,7 @@ def dataHandler():
             query = "get:" + input("Key in country name : ").capitalize()
             print("Query : ", query)
             results = ClientChat(query).messaging()
-            print(results)
+            # print(results)
 
         elif choice == "2":
             pass

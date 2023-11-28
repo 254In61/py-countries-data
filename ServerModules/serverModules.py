@@ -4,7 +4,6 @@ import os
 
 
 def mysql_query(query):
-
     # Establish a connection to the database
     try:
         connection = mysql.connector.connect(
@@ -21,15 +20,25 @@ def mysql_query(query):
                 cursor = connection.cursor()
 
                 # Execute a query
-                cursor.execute(query) # cursor.execute(query) returns a List
+                cursor.execute(query) 
 
                 # Fetch results
-                rows = cursor.fetchall()
+                rows = cursor.fetchall() # cursor.fetchall() returns a List
                 print("Query results : ", rows)
-                return rows
+                
+                # socket transmits a string, so List has to be converted to a string
+                if mysql_query(query) == []:
+                    out_string = "Country data not present"
+
+                else:
+                    out_string = json.dumps(mysql_query(query)[0])
+
+                return out_string
+                
             
             except mysql.connector.Error as e:
                 print(f"Error executing SQL query: {e}")
+                return "Error executing SQL query"
 
             finally:
                 if 'cursor' in locals():
@@ -38,52 +47,12 @@ def mysql_query(query):
    
     except mysql.connector.Error as e:
         print(f"Error connecting to MySQL database: {e}")
+        return "Error connecting to MySQL database"
     
     finally:
         if 'connection' in locals() and connection.is_connected():
             connection.close() #  close the cursor and connection properly when you're done to avoid resource leaks.
             print('MySQL database connection closed')
-
-
-class DataBase:
-    """
-    - A query comes in as a string value 'column_name:value_searched'
-    - Query is split into the different values to fit into an sql WHERE format.
-    - Results are converted into JSON string before returned.
-    """
-
-    def __init__(self, in_str):
-        self.in_str = in_str
-
-    def getData(self):
-        
-        query = "select * from Countries where CountryName = '{}'".format(self.in_str.split(":")[1])
-        print("MySQL Query : ", query)
-
-        if mysql_query(query) == []:
-            out_string = "ERROR.No data present about : '{}'".format(self.in_str.split(":")[1])
-
-        else:
-            # socket transmits a string, so List has to be converted to a string
-            out_string = json.dumps(mysql_query(query)[0])
-
-        print("Results sent to client : ", out_string)
-        return out_string
-
-        # except IndexError:
-        #     return "ERROR during data querry"
-        
-        # except mysql.connector.errors.ProgrammingError:
-        #     return "Unknown column in 'where clause'"
-
-    def putData(self):
-        pass
-
-    def postData(self):
-        pass
-
-    def deleteData(self):
-        pass
 
 
 class ServerMessageExchange:
@@ -96,21 +65,22 @@ class ServerMessageExchange:
 
     def messaging(self):
         """
-        Step 1: Decode query message recieved through clientsocket.
-        Step 2: Query the MySQL server through DataBaseQuery class
+        Step 1: Decode string pattern message recieved through clientsocket.
+        Step 2: Based on the string pattern message, query the MySQL server.
         Step 3: Send query results back to client.
         """
-        query = self.clientsocket.recv(1024).decode("utf-8")
-        print("Incoming Client message : ", query)
+        string_pattern = self.clientsocket.recv(1024).decode("utf-8")
+        print("Incoming Client message : ", string_pattern)
 
-        if "get" in query:
-            self.clientsocket.sendall(DataBase(query).getData().encode("utf-8"))
+        if "get" in string_pattern:
+            query = "select * from Countries where CountryName = '{}'".format(string_pattern.split(":")[1])
+            self.clientsocket.sendall(mysql_query(query).encode("utf-8"))
 
-        elif "put" in query:
-            self.clientsocket.sendall(DataBase(query).putData().encode("utf-8"))
+        elif "put" in string_pattern:
+            self.clientsocket.sendall(mysql_query(query).encode("utf-8"))
 
-        elif "post" in query:
-            self.clientsocket.sendall(DataBase(query).postData().encode("utf-8"))
+        # elif "post" in string_pattern:
+        #     self.clientsocket.sendall(DataBase(string_pattern).postData().encode("utf-8"))
 
-        elif "delete" in query:
-            self.clientsocket.sendall(DataBase(query).deleteData().encode("utf-8"))
+        # elif "delete" in string_pattern:
+        #     self.clientsocket.sendall(DataBase(string_pattern).deleteData().encode("utf-8"))
