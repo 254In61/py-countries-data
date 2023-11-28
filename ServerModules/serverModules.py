@@ -18,7 +18,7 @@ def mysql_query(query):
     # Execute a query
     cursor.execute(query)
     output = cursor.fetchall() # Fetch results with cursor.fetchall()
-    print("mysql_query() : Query results => ", cursor.fetchall())
+    print("mysql_query() : Query results => ", output)
 
     cursor.close() # close the cursor and connection properly when you're done to avoid resource leaks.
     connection.close()

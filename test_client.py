@@ -1,5 +1,4 @@
-from AppModules.clientModules import *
-from AppModules.socketParams import *
+from ClientModules.clientModules import *
 
 # Test
 def test_get_kenya():

@@ -23,20 +23,14 @@ class ClientChat:
 
         # Send query to server through socket
         cs = create_socket()
-        print("Message sent: ", self.query)
+        # print("Message sent: ", self.query)
         cs.sendall(self.query.encode("utf-8"))
 
         # Recieve result from server
         query_result = cs.recv(1024).decode("utf-8")
-        print("Message recieved : ", query_result)
+        # print("Message recieved : ", query_result)
 
         return query_result
-
-
-def menu():
-    print(
-        "\nMENU\n1 = Get information\n2 = Put updated information\n3 = Post new information\n4 = Delete existing information\n"
-    )
 
 
 def collect_values():

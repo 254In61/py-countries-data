@@ -1,6 +1,12 @@
 from ClientModules.clientModules import *
 
-def dataHandler():
+def menu():
+    print("\nMENU\n1 = Get Data\n2 = Update Data\n3 = New Data\n4 = Delete Data\n")
+
+
+
+def main():
+    # Initialize the program
     menu()
     choice = input("Key in your choice as per the menu : ")
 
@@ -11,8 +17,8 @@ def dataHandler():
         if choice == "1":
             query = "get:" + input("Key in country name : ").capitalize()
             print("Query : ", query)
-            results = ClientChat(query).messaging()
-            # print(results)
+            # results = ClientChat(query).messaging()
+            print("Message recieved : ", ClientChat(query).messaging())
 
         elif choice == "2":
             pass
@@ -22,11 +28,6 @@ def dataHandler():
 
         elif choice == "4":
             pass
-
-
-def main():
-    # Initialize the program
-    dataHandler()
 
 if __name__ == "__main__":
     main()
