@@ -5,7 +5,7 @@ import os
 def create_socket():
     # Create client socket
     cs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    cs.connect((os.environ.get("MYSQL_SERVER_HOST"), os.environ.get("MYSQL_SERVER_PORT")))
+    cs.connect((os.environ.get("MYSQL_SERVER_HOST"), int(os.environ.get("MYSQL_SERVER_PORT"))))
     return cs
 
 

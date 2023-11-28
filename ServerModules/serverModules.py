@@ -6,7 +6,12 @@ import os
 def mysql_connect():
 
     try:
-        cnx = mysql.connector.connect(host="localhost",user=os.environ.get("MYSQL_USER"),password=os.environ.get("MYSQL_PASSWORD"),database="mydb")
+        cnx = mysql.connector.connect(
+                host="localhost",
+                user=os.environ.get("MYSQL_SERVER_USER"),
+                password=os.environ.get("MYSQL_SERVER_PASSWD"),
+                database="mydb"
+            )
         return cnx
     except:
         print ("Error in connecting to the mysql server")

@@ -15,7 +15,11 @@ def main():
     The bind() method is used to associate a socket with a specific network interface and port number. 
      
     The bind() method typically requires a single argument, which is a tuple containing the IP address 
-    and port number to bind the socket to. Here's an example:
+    and port number to bind the socket to. 
+    
+    Port has to be an integer
+    
+    Port has to be between 0-65535
     """
     print("Putting socket in listening state....")
     s.listen(1)  # Use listen() method within the socket class
