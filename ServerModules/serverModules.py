@@ -23,7 +23,7 @@ def mysql_query(query):
 
 
     list_x = cursor.fetchall()
-    
+
     out_string = json.dumps(list_x)
     print("mysql_query() : Data string to client => ", out_string)
                 
