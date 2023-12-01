@@ -1,5 +1,5 @@
 from ClientModules.clientModules import *
-import time
+#import time
 
 
 def main():
@@ -12,7 +12,7 @@ def main():
             query = "get:" + country
             print("Message recieved : ", ClientChat(query).messaging())
         count += 1
-        time.sleep(2)
+        #time.sleep(2)
 
 
 if __name__ == "__main__":
