@@ -7,7 +7,7 @@ def main():
     
     countries = ["Kenya","Uganda","USA","Rwanda","Tanzania","Indonesia"]
 
-    for count in range(50):
+    for count in range(100):
         for country in countries:
             query = "get:" + country
             print("Message recieved : ", ClientChat(query).messaging())
