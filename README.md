@@ -8,6 +8,7 @@ Overview
 
 TESTING
 ========
+=> Pytest redirecting source to AWS??  :  $ sudo apt-get install python3-pytest
 
 1) Unittests
 -------------

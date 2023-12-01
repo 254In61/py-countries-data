@@ -28,10 +28,11 @@ def mysql_query(query):
 
 def string_output(query):
     
-    # cursor.fetchall() returns output as a list 
+    # cursor.fetchall() returns output as a list enclosing a tuple
     list_x = mysql_query(query)
 
     # Socket transmits in a string format so convert list to string
+    # End result is not a tuple within a list, but a sub-list within a list
     # Server end will not process any data. Just querry the MySQL and send results through the socket.
     # Client to decide what to do with the end results.
     
