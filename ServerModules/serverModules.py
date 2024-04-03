@@ -36,7 +36,7 @@ def string_output(query):
     # Server end will not process any data. Just querry the MySQL and send results through the socket.
     # Client to decide what to do with the end results.
     
-    print("string_output() : Data string to client => ", json.dumps(list_x))
+    print(json.dumps(list_x))
     
     return json.dumps(list_x)
 
