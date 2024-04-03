@@ -43,7 +43,6 @@ def string_output(query):
 class DBQuery():
     """
     - Job of class is just to interract with the MySQL DB Server.
-    - Expects data in the format "<api action>:<Country name> e.g get:Kenya, post:Zambia, put:Australia, delete:USA
     """
     def __init__(self,string_pattern):
         self.string_pattern = string_pattern
@@ -56,3 +55,31 @@ class DBQuery():
     def putData(self):
         pass
 
+class ServerMessageExchange:
+    """
+    - Job of class is just to send and recieve messages from client through the created socket.
+    """
+
+    def __init__(self, clientsocket):
+        self.clientsocket = clientsocket
+
+    def messaging(self):
+        """
+        Step 1: Decode string pattern message recieved through clientsocket.
+        Step 2: Based on the string pattern message, query the MySQL server.
+        Step 3: Send query results back to client.
+        """
+        string_pattern = self.clientsocket.recv(1024).decode("utf-8")
+        print("ServerMessageExchange().messaging() => string pattern : ", string_pattern)
+
+        if "get" in string_pattern:
+            self.clientsocket.sendall(DBQuery(string_pattern).getData().encode("utf-8"))
+
+        elif "put" in string_pattern:
+            self.clientsocket.sendall(DBQuery(string_pattern).putData().encode("utf-8"))
+
+        # elif "post" in string_pattern:
+        #     self.clientsocket.sendall(DataBase(string_pattern).postData().encode("utf-8"))
+
+        # elif "delete" in string_pattern:
+        #     self.clientsocket.sendall(DataBase(string_pattern).deleteData().encode("utf-8"))
