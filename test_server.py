@@ -7,3 +7,6 @@ print(DBQuery("get:Kenya").getData())
 
 print("\n==>Get Uganda details \n")
 print(DBQuery("get:Uganda").getData())
+
+print("\n==>Get Uganda details \n")
+print(DBQuery("get:Australia").getData())
