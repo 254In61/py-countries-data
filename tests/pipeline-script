@@ -1,0 +1,126 @@
+pipeline {
+    agent any
+
+    // environment {
+    //     // Define any environment variables here
+    //     ENVIRONMENT = 'staging'
+    //     DEPLOY_SERVER = 'user@server:/path/to/deploy'
+    // }
+
+    // options {
+    //     // Keep only the 10 most recent builds
+    //     buildDiscarder(logRotator(numToKeepStr: '10'))
+    //     // Add timestamps to the console output
+    //     timestamps()
+    // }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                // Checkout the code from the repository
+                git clone -b develop 'https://github.com/254In61/jenkins-cicd-test.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Install project dependencies
+                sh 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                // pylint modules
+                pylint mymodules/*.py
+
+                // Pylint scripts/
+                pylint scripts/*.py
+
+                // Pylint tests/
+                pylint tests/*.py
+
+                // Archive the pylint report
+                archiveArtifacts 'pylint_report.txt'
+                // Optionally fail the build if Pylint errors exceed a threshold
+                // script {
+                //     def pylintWarnings = sh(script: 'grep -c "^[^:]+:[0-9]+:[0-9]+: [CRE]" pylint_report.txt || true', returnStdout: true).trim()
+                //     if (pylintWarnings.toInteger() > 0) {
+                //         error "Pylint found ${pylintWarnings} issues."
+                //     }
+                // }
+            }
+        }
+
+        stage('Unittests') {
+            steps {
+                // Run pytest
+                // sh 'pytest --junitxml=pytest_report.xml'
+                pytest
+            }
+            // post {
+            //     always {
+            //         // Archive test results
+            //         junit 'pytest_report.xml'
+            //     }
+            // }
+        }
+
+        // stage('Build') {
+        //     steps {
+        //         // Build the project
+        //         sh './gradlew clean build' // For a Gradle project
+        //         // sh 'mvn clean install' // For a Maven project
+        //     }
+        // }
+
+        // stage('Deploy to Staging') {
+        //     when {
+        //         // Only deploy if the branch is 'main' or 'master'
+        //         branch 'main'
+        //     }
+        //     steps {
+        //         // Deploy to the staging server
+        //         sh "scp -r build/libs/* ${DEPLOY_SERVER}"
+        //     }
+        // }
+
+        // stage('Notify') {
+        //     steps {
+        //         script {
+        //             // Send a notification to Slack
+        //             slackSend (
+        //                 channel: '#ci-cd',
+        //                 color: 'good',
+        //                 message: "Build ${env.BUILD_NUMBER} succeeded. See details at ${env.BUILD_URL}"
+        //             )
+        //         }
+        //     }
+        // }
+    }
+
+    post {
+        always {
+            // Clean up workspace
+            cleanWs()
+        }
+        success {
+            script {
+                // Custom success message
+                echo 'Pipeline succeeded!'
+            }
+        }
+        failure {
+            script {
+                // Custom failure message
+                echo 'Pipeline failed!'
+                // Send a failure notification to Slack
+                slackSend (
+                    channel: '#ci-cd',
+                    color: 'danger',
+                    message: "Build ${env.BUILD_NUMBER} failed. See details at ${env.BUILD_URL}"
+                )
+            }
+        }
+    }
+}

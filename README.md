@@ -1,79 +1,74 @@
-Overview
-========
-- Tool made up of 3 main parts.
+# Overview
+Project end objective is for clients to query data from their end devices and get the info they want.
 
-- 1) Database : MySQL Database with a table called "countries"
+Private project in a Private repo.
 
-- 2) Server script : Script that runs within the DB Server , which perfoms SQL querries to the DB.
+# design
+- Data stored in a mysql db server.
+- mysql db server hosted in a kubernetes cluster as a pod.
+- application server has the logic.
+- Client does a query on Web browser or uses curl.
 
-- 3) client end : Client script picks options, and sends a string over the network socket to a listening server. Server translates the string into an SQL query.
+# mysql db & k8s cluster
+- Microk8s cluster is installed on the-eagle(192.168.1.100).
 
-- Design obsifucates the DB Server from external environment.
+- The-eagle is also the application server and has access to the K8s cluster that hosts the myql app.
 
-TESTING
-========
-=> Pytest redirecting source to AWS??  :  $ sudo apt-get install python3-pytest
+- Check svc details attached to the pod:
+  $ kubectl get svc  OR  $ kubectl describe svc/mysql
 
-1) Unittests
--------------
-- pyytest of specific classes within the ServerModules.
+- Test access: $ mysql -h <cluster Ip assigned to mysql> -P 3306 -u panther -p
+  Example: mysql -h 10.152.183.178 -P 3306 -u panther -p
 
-2) Integration testing
-----------------------
-- Workflow created in Jenkins server
+# testing application server
+1. - On the-eagle : $ cd app/tests && python3 test-server.py
 
-- Workflow runs the unittest first and when all is good, integration tests next.
+  $ python3 test-server.py 
+ * Serving Flask app 'test-server'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.100:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 105-246-364
 
-- Integration tests are done using Docker containers to simulate client end, who then run a client script with pre-defined data.
+2. - From remote clients send https requests either through 
+   a) web browser
+   b) curl : $ curl http://192.168.1.100:5000/hello
+   c) postman
+ - 3 end-points have been created for the test-server.py i.e /mambo, /malagho and /hello
+ - Send requests to these end-points.
 
-docker
-=======
-- A ready docker image built as per the Dockerfile attached.
-
-- Docker images are created , script run and then destroyed, all within the ansible script, site.yml.
-
-How to Use
-==========
-- Set environmental variables for that specific subshell for:
-
-  1) MYSQL_USER 
-
-  2) MYSQL_PASSWORD
-
-- Start the server with server.py
+# dns names
+- I don't have a DNS at home.
+- But I have the following in /etc/hosts
 
 
-MySQL
-=====
-- The SQL server details are added in AppModule/socketParams.py
+# testing db connection
+1. log into the-eagle
 
-- Sample MySQL Table used:
+2. confirm the mysql svc ip first and confirm it is the one in ~/secrets/mysql-microk8s-env-vars-the-eagle
+   $ kubectl get svc  OR  $ kubectl describe svc/mysql
 
-mysql> select * from Countries;
-+-------------+-------------+------------+-----------------+-------------------+
+3. $ git clone repo or $ git pull if already existing and in need of update.
 
-| CountryName | CountryCode | Capitol    | Leader          | PopulationMillion |
+4. $ source ~/secrets/mysql-microk8s-env-vars-the-eagle
 
-+-------------+-------------+------------+-----------------+-------------------+
+5. $ python3 test-db-connection.py
 
-| Kenya       |         254 | Nairobi    | William Ruto    |              50.2 |
+# container testing
+- Chose to use podman instead of docker because of this :
 
-| Tanzania    |         255 | Dodoma     | Samia Suluhu    |              60.2 |
+  permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/images/create?fromImage=ubuntu&tag=latest": dial unix /var/run/docker.sock: connect: permission denied
 
-| Australia   |          61 | Canberra   | Antony Albanese |              28.5 |
 
-| USA         |           1 | Washington | Joe Biden       |             320.4 |
-
-+-------------+-------------+------------+-----------------+-------------------+
-
-4 rows in set (0.00 sec)
-
-- Ensure your Application Server has python mysql-connector installed.
-
-  $ pip install mysql-connector-python
+# how to use
 
 
 
-Author
-======
-254in61
+# author
+
+Name: 254In61

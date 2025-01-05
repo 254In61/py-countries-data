@@ -1,0 +1,85 @@
+pipeline {
+    agent any
+
+    stages {
+//     Stage happens automatically when Jenkinsfile is downloaded
+//     stage('Clone Repository') {
+//             steps {
+//                 // Checkout the code from the repository
+//                 git clone -b develop 'https://github.com/254In61/jenkins-cicd-test.git'
+//             }
+//     }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                echo "== Install dependencies"
+                pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                sh '''
+                echo "Check code for lints using pylint"
+                pylint mymodules/calculator.py
+                pylint scripts/run_script.py
+                '''
+            }
+        }
+
+        stage('Unittests') {
+            steps {
+                sh '''
+                echo 'Unittests stage and steps...'
+                pytest
+                '''
+
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building stage and steps..'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Testing stage and steps..'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying stage and steps...'
+            }
+        }
+   }
+
+   post {
+        always {
+            // Clean up workspace
+            cleanWs()
+        }
+        success {
+            script {
+                // Custom success message
+                echo 'Pipeline succeeded!'
+            }
+        }
+        failure {
+            script {
+                // Custom failure message
+                echo 'Pipeline failed!'
+                // Send a failure notification to Slack
+                slackSend (
+                    channel: '#ci-cd',
+                    color: 'danger',
+                    message: "Build ${env.BUILD_NUMBER} failed. See details at ${env.BUILD_URL}"
+                )
+            }
+        }
+   }
+}
